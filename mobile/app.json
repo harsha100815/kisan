@@ -15,10 +15,17 @@
       "edgeToEdgeEnabled": true,
       "softwareKeyboardLayoutMode": "pan"
     },
-    "web": { "bundler": "metro" },
-    "experiments": { "tsconfigPaths": true },
+    "web": {
+      "bundler": "metro"
+    },
+    "experiments": {
+      "tsconfigPaths": true
+    },
     "extra": {
       "apiUrl": "http://10.0.2.2:8000/api/v1"
-    }
+    },
+    "plugins": [
+      "expo-router"
+    ]
   }
 }

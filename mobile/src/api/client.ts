@@ -35,6 +35,34 @@ export interface HealthStatus {
   version: string;
 }
 
+export interface PriceRow {
+  market: string;
+  district: string;
+  state: string;
+  commodity: string;
+  variety: string | null;
+  observation_date: string;
+  min_price: number;
+  max_price: number;
+  modal_price: number;
+  source: string;
+}
+
+export interface PricesToday {
+  source: string;
+  date: string;
+  count: number;
+  rows: PriceRow[];
+}
+
 export const api = {
   health: () => request<HealthStatus>('/health'),
+  pricesToday: (params?: { commodity?: string; state?: string }) => {
+    const query = params?.commodity
+      ? `?commodity=${encodeURIComponent(params.commodity)}`
+      : params?.state
+        ? `?state=${encodeURIComponent(params.state)}`
+        : '';
+    return request<PricesToday>(`/prices/today${query}`);
+  },
 };

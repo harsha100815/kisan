@@ -3,8 +3,8 @@
  * Canonical strings live in shared/i18n/locales; Metro resolves ../../shared via
  * the mobile/package.json "workspaces" hack-free watchFolders config in metro.config.js.
  */
-import en from '../../shared/i18n/locales/en.json';
-import hi from '../../shared/i18n/locales/hi.json';
+import en from '../../../shared/i18n/locales/en.json';
+import hi from '../../../shared/i18n/locales/hi.json';
 import { createContext, useContext } from 'react';
 
 export type LanguageCode = 'en' | 'hi';

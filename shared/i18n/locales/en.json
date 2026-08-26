@@ -19,7 +19,11 @@
   },
   "prices": {
     "title": "Today's mandi prices",
-    "coming_soon": "Mandi prices arrive with the next release."
+    "coming_soon": "Mandi prices arrive with the next release.",
+    "updated": "Prices update daily · source: mandi feed",
+    "range": "Range",
+    "error": "Could not load prices. Check your connection.",
+    "retry": "Try again"
   },
   "diag": {
     "title": "Crop disease check",
