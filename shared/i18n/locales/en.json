@@ -1,0 +1,47 @@
+{
+  "common": {
+    "app_name": "Kisan Sahayak",
+    "tagline": "Right price. Healthy crop.",
+    "continue": "Continue",
+    "retry": "Try again",
+    "offline_banner": "You are offline — showing saved data"
+  },
+  "onboarding": {
+    "choose_language": "Choose your language",
+    "english": "English",
+    "hindi": "हिंदी"
+  },
+  "tabs": {
+    "prices": "Prices",
+    "diagnose": "Diagnose",
+    "advisory": "Advice",
+    "more": "More"
+  },
+  "prices": {
+    "title": "Today's mandi prices",
+    "coming_soon": "Mandi prices arrive with the next release."
+  },
+  "diag": {
+    "title": "Crop disease check",
+    "take_photo": "Take a photo of the sick leaf",
+    "analyzing": "Checking your photo…",
+    "result_title": "What we found (preliminary)",
+    "confidence_high": "High match",
+    "confidence_medium": "Possible match",
+    "confidence_low": "Uncertain — please verify locally",
+    "unavailable_body": "Diagnosis is not available right now. Please try again later.",
+    "disclaimer": {
+      "not_guaranteed": "This is a computer-generated suggestion, NOT a guaranteed diagnosis. Confirm with your local agriculture officer before spraying any medicine."
+    }
+  },
+  "advisory": {
+    "title": "Crop advice",
+    "coming_soon": "Season-wise advice is coming soon."
+  },
+  "more": {
+    "title": "More",
+    "language": "Language",
+    "alerts": "Price alerts",
+    "help": "Help"
+  }
+}

@@ -1,0 +1,24 @@
+{
+  "expo": {
+    "name": "Kisan Sahayak",
+    "slug": "kisan-sahayak",
+    "version": "0.1.0",
+    "orientation": "portrait",
+    "userInterfaceStyle": "light",
+    "newArchEnabled": true,
+    "splash": {
+      "resizeMode": "contain",
+      "backgroundColor": "#1B5E20"
+    },
+    "android": {
+      "package": "com.kisansahayak.app",
+      "edgeToEdgeEnabled": true,
+      "softwareKeyboardLayoutMode": "pan"
+    },
+    "web": { "bundler": "metro" },
+    "experiments": { "tsconfigPaths": true },
+    "extra": {
+      "apiUrl": "http://10.0.2.2:8000/api/v1"
+    }
+  }
+}

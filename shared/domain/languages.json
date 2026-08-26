@@ -1,0 +1,11 @@
+[
+  { "code": "hi", "name": "हिंदी", "english_name": "Hindi", "v1": true },
+  { "code": "en", "name": "English", "english_name": "English", "v1": true },
+  { "code": "mr", "name": "मराठी", "english_name": "Marathi", "v1": false },
+  { "code": "te", "name": "తెలుగు", "english_name": "Telugu", "v1": false },
+  { "code": "kn", "name": "ಕನ್ನಡ", "english_name": "Kannada", "v1": false },
+  { "code": "ta", "name": "தமிழ்", "english_name": "Tamil", "v1": false },
+  { "code": "gu", "name": "ગુજરાતી", "english_name": "Gujarati", "v1": false },
+  { "code": "pa", "name": "ਪੰਜਾਬੀ", "english_name": "Punjabi", "v1": false },
+  { "code": "bn", "name": "বাংলা", "english_name": "Bengali", "v1": false }
+]

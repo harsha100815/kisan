@@ -1,0 +1,14 @@
+[
+  { "key": "cotton", "name_en": "Cotton", "name_hi": "कपास" },
+  { "key": "soybean", "name_en": "Soybean", "name_hi": "सोयाबीन" },
+  { "key": "paddy", "name_en": "Paddy (Rice)", "name_hi": "धान" },
+  { "key": "wheat", "name_en": "Wheat", "name_hi": "गेहूँ" },
+  { "key": "maize", "name_en": "Maize", "name_hi": "मक्का" },
+  { "key": "groundnut", "name_en": "Groundnut", "name_hi": "मूंगफली" },
+  { "key": "tomato", "name_en": "Tomato", "name_hi": "टमाटर" },
+  { "key": "chilli", "name_en": "Chilli", "name_hi": "मिर्च" },
+  { "key": "onion", "name_en": "Onion", "name_hi": "प्याज़" },
+  { "key": "potato", "name_en": "Potato", "name_hi": "आलू" },
+  { "key": "pigeon_pea", "name_en": "Pigeon pea (Tur)", "name_hi": "अरहर (तूर)" },
+  { "key": "banana", "name_en": "Banana", "name_hi": "केला" }
+]
