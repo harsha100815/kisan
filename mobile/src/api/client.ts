@@ -55,8 +55,36 @@ export interface PricesToday {
   rows: PriceRow[];
 }
 
+export interface DiagnosisResult {
+  audit_id: string;
+  status: 'completed' | 'unavailable' | 'failed';
+  is_definitive: boolean;
+  confidence_band: 'high' | 'medium' | 'low' | null;
+  prediction: { disease_key: string; confidence: number } | null;
+  alternatives: { disease_key: string; confidence: number }[];
+  provider: string;
+  model_version: string | null;
+  disclaimer_key: string;
+}
+
+async function requestForm<T>(path: string, form: FormData): Promise<T> {
+  const resp = await fetch(`${baseUrl}${path}`, { method: 'POST', body: form });
+  if (!resp.ok) throw new ApiError(resp.status, `API ${resp.status} on ${path}`);
+  return (await resp.json()) as T;
+}
+
 export const api = {
   health: () => request<HealthStatus>('/health'),
+  diagnose: (imageUri: string, cropKey?: string, language = 'hi') => {
+    const form = new FormData();
+    const name = imageUri.split('/').pop() ?? 'photo.jpg';
+    const ext = name.includes('.') ? name.split('.').pop()!.toLowerCase() : 'jpg';
+    const mime = ext === 'png' ? 'image/png' : 'image/jpeg';
+    form.append('image', { uri: imageUri, name, type: mime } as unknown as Blob);
+    if (cropKey) form.append('crop_key', cropKey);
+    form.append('language', language);
+    return requestForm<DiagnosisResult>('/diagnosis/diagnose', form);
+  },
   pricesToday: (params?: { commodity?: string; state?: string }) => {
     const query = params?.commodity
       ? `?commodity=${encodeURIComponent(params.commodity)}`

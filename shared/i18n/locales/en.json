@@ -46,6 +46,8 @@
     "title": "More",
     "language": "Language",
     "alerts": "Price alerts",
-    "help": "Help"
+    "help": "Help",
+    "server_ok": "Connected to price service",
+    "server_down": "Service unreachable — check connection"
   }
 }
