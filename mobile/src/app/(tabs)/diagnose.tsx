@@ -2,8 +2,13 @@ import { useState } from 'react';
 import { ActivityIndicator, Image, Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
 import { api, type DiagnosisResult } from '../../api/client';
-import { useLanguage, useT } from '../../i18n';
+import crops from '../../../../shared/domain/crops.json';
+import { useLanguage, useT, type LanguageCode } from '../../i18n';
 import { colors, fontSize, radius, spacing } from '../../theme/tokens';
+
+type Crop = { key: string; name_en: string; name_hi: string };
+
+const CROP_LIST = crops as Crop[];
 
 /**
  * Photo-diagnosis flow. Every result follows the uncertainty contract:
@@ -13,9 +18,12 @@ export default function DiagnoseScreen() {
   const t = useT();
   const { lang } = useLanguage();
   const [imageUri, setImageUri] = useState<string | null>(null);
+  const [cropKey, setCropKey] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
   const [result, setResult] = useState<DiagnosisResult | null>(null);
   const [error, setError] = useState(false);
+
+  const cropName = (c: Crop, l: LanguageCode) => (l === 'hi' ? c.name_hi : c.name_en);
 
   const pick = async () => {
     const perm = await ImagePicker.requestCameraPermissionsAsync();
@@ -23,16 +31,10 @@ export default function DiagnoseScreen() {
       const library = await ImagePicker.requestMediaLibraryPermissionsAsync();
       if (!library.granted) return;
     }
-    const shot = await ImagePicker.launchCameraAsync({
-      quality: 0.6,
-      allowsEditing: false,
-    });
+    const shot = await ImagePicker.launchCameraAsync({ quality: 0.6, allowsEditing: false });
     let uri = shot.assets?.[0]?.uri ?? null;
     if (!uri) {
-      const pickLib = await ImagePicker.launchImageLibraryAsync({
-        quality: 0.6,
-        allowsEditing: false,
-      });
+      const pickLib = await ImagePicker.launchImageLibraryAsync({ quality: 0.6, allowsEditing: false });
       uri = pickLib.assets?.[0]?.uri ?? null;
     }
     if (uri) {
@@ -47,7 +49,7 @@ export default function DiagnoseScreen() {
     setBusy(true);
     setError(false);
     try {
-      setResult(await api.diagnose(imageUri, undefined, lang));
+      setResult(await api.diagnose(imageUri, cropKey ?? undefined, lang));
     } catch {
       setError(true);
     } finally {
@@ -72,9 +74,24 @@ export default function DiagnoseScreen() {
         )}
       </Pressable>
 
+      <Text style={styles.section}>{t('diag.select_crop')}</Text>
+      <View style={styles.cropWrap}>
+        {CROP_LIST.map((c) => (
+          <Pressable
+            key={c.key}
+            onPress={() => setCropKey(cropKey === c.key ? null : c.key)}
+            style={[styles.chip, cropKey === c.key && styles.chipActive]}
+          >
+            <Text style={[styles.chipText, cropKey === c.key && styles.chipTextActive]}>
+              {cropName(c, lang)}
+            </Text>
+          </Pressable>
+        ))}
+      </View>
+
       {imageUri && !result && !busy && (
         <Pressable style={styles.primaryBtn} onPress={() => void analyze()}>
-          <Text style={styles.primaryBtnText}>{t('diag.analyzing').replace('…', '')}</Text>
+          <Text style={styles.primaryBtnText}>{t('diag.check')}</Text>
         </Pressable>
       )}
 
@@ -122,11 +139,25 @@ const styles = StyleSheet.create({
   },
   preview: { width: '100%', height: '100%' },
   photoHint: { fontSize: fontSize.body, color: colors.textMuted, textAlign: 'center', padding: spacing.lg },
+  section: { fontSize: fontSize.body, color: colors.textMuted, marginTop: spacing.xs },
+  cropWrap: { flexDirection: 'row', flexWrap: 'wrap', gap: spacing.sm },
+  chip: {
+    borderRadius: radius.md,
+    borderWidth: 1,
+    borderColor: colors.border,
+    paddingHorizontal: spacing.md,
+    paddingVertical: spacing.sm,
+    backgroundColor: colors.surface,
+  },
+  chipActive: { backgroundColor: colors.primary, borderColor: colors.primary },
+  chipText: { fontSize: fontSize.body, color: colors.text },
+  chipTextActive: { color: '#FFFFFF' },
   primaryBtn: {
     backgroundColor: colors.primary,
     borderRadius: radius.md,
     paddingVertical: spacing.md,
     alignItems: 'center',
+    marginTop: spacing.xs,
   },
   primaryBtnText: { color: '#FFFFFF', fontSize: fontSize.body + 2, fontWeight: '700' },
   spinner: { marginVertical: spacing.lg },
@@ -140,7 +171,12 @@ const styles = StyleSheet.create({
     gap: spacing.sm,
   },
   cardTitle: { fontSize: fontSize.body, fontWeight: '700', color: colors.text },
-  prediction: { fontSize: fontSize.body + 4, fontWeight: '700', color: colors.primary, textTransform: 'capitalize' },
+  prediction: {
+    fontSize: fontSize.body + 4,
+    fontWeight: '700',
+    color: colors.primary,
+    textTransform: 'capitalize',
+  },
   band: { fontSize: fontSize.body, color: colors.accent, fontWeight: '600' },
   alternatives: { fontSize: fontSize.small, color: colors.textMuted },
   cardText: { fontSize: fontSize.body, color: colors.textMuted },

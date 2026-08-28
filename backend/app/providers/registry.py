@@ -25,9 +25,9 @@ def get_vision_provider(settings: Settings | None = None) -> VisionProvider:
         case "null":
             return NullVisionProvider()
         case "openai":
-            from app.providers.vision.openai_like import OpenAILikeVisionProvider
+            from app.providers.vision.openai_like import OpenAIVisionProvider
 
-            return OpenAILikeVisionProvider(settings.OPENAI_API_KEY, settings.OPENAI_VISION_MODEL)
+            return OpenAIVisionProvider(settings.OPENAI_API_KEY, settings.OPENAI_VISION_MODEL)
         case _:
             raise ValueError(f"Unknown VISION_PROVIDER: {settings.VISION_PROVIDER}")
 
@@ -60,7 +60,11 @@ def get_mandi_price_source(settings: Settings | None = None) -> MandiPriceSource
         case "stub":
             return StubMandiPriceSource()
         case "datagov":
-            raise NotImplementedError("data.gov.in adapter lands with the ingestion phase")
+            if not settings.DATAGOV_API_KEY:
+                raise ValueError("MANDI_PRICE_SOURCE=datagov requires DATAGOV_API_KEY")
+            from app.providers.mandi.datagov import DataGovMandiPriceSource
+
+            return DataGovMandiPriceSource(settings.DATAGOV_API_KEY)
         case _:
             raise ValueError(f"Unknown MANDI_PRICE_SOURCE: {settings.MANDI_PRICE_SOURCE}")
 

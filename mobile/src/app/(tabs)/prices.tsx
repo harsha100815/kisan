@@ -1,13 +1,22 @@
 import { useCallback, useEffect, useState } from 'react';
-import { ActivityIndicator, FlatList, RefreshControl, StyleSheet, Text, View } from 'react-native';
+import {
+  ActivityIndicator,
+  FlatList,
+  RefreshControl,
+  StyleSheet,
+  Text,
+  TextInput,
+  View,
+} from 'react-native';
 import { api, type PriceRow } from '../../api/client';
 import { useT } from '../../i18n';
 import { colors, fontSize, radius, spacing } from '../../theme/tokens';
 
-/** Today's mandi prices — live from GET /prices/today (stub source for now). */
+/** Today's mandi prices — live from GET /prices/today, with search filter. */
 export default function PricesScreen() {
   const t = useT();
   const [rows, setRows] = useState<PriceRow[]>([]);
+  const [query, setQuery] = useState('');
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
   const [refreshing, setRefreshing] = useState(false);
@@ -28,6 +37,16 @@ export default function PricesScreen() {
   useEffect(() => {
     void load();
   }, [load]);
+
+  const q = query.trim().toLowerCase();
+  const filtered = q
+    ? rows.filter(
+        (r) =>
+          r.commodity.toLowerCase().includes(q) ||
+          r.market.toLowerCase().includes(q) ||
+          r.state.toLowerCase().includes(q),
+      )
+    : rows;
 
   if (loading) {
     return (
@@ -52,12 +71,33 @@ export default function PricesScreen() {
     <FlatList
       style={styles.container}
       contentContainerStyle={styles.list}
-      data={rows}
-      keyExtractor={(r) => `${r.market}-${r.commodity}-${r.variety ?? ''}`}
+      data={filtered}
+      keyExtractor={(r, i) => `${r.market}-${r.commodity}-${r.variety ?? ''}-${i}`}
       refreshControl={
-        <RefreshControl refreshing={refreshing} onRefresh={() => { setRefreshing(true); void load(); }} />
+        <RefreshControl
+          refreshing={refreshing}
+          onRefresh={() => {
+            setRefreshing(true);
+            void load();
+          }}
+        />
       }
-      ListHeaderComponent={<Text style={styles.updated}>{t('prices.updated')}</Text>}
+      ListHeaderComponent={
+        <View style={styles.header}>
+          <TextInput
+            style={styles.search}
+            placeholder={t('prices.search')}
+            placeholderTextColor={colors.textMuted}
+            value={query}
+            onChangeText={setQuery}
+            returnKeyType="search"
+          />
+          <Text style={styles.updated}>
+            {filtered.length} · {t('prices.updated')}
+          </Text>
+        </View>
+      }
+      ListEmptyComponent={<Text style={styles.empty}>{t('prices.no_match')}</Text>}
       renderItem={({ item }) => (
         <View style={styles.card}>
           <View style={styles.rowTop}>
@@ -80,8 +120,19 @@ export default function PricesScreen() {
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: colors.background },
   list: { padding: spacing.md, gap: spacing.md },
-  center: { alignItems: 'center', justifyContent: 'center' },
-  updated: { fontSize: fontSize.small, color: colors.textMuted, marginBottom: spacing.sm },
+  center: { alignItems: 'center', justifyContent: 'center', padding: spacing.md },
+  header: { gap: spacing.sm, marginBottom: spacing.xs },
+  search: {
+    backgroundColor: colors.surface,
+    borderRadius: radius.md,
+    paddingHorizontal: spacing.md,
+    paddingVertical: spacing.sm + 2,
+    fontSize: fontSize.body,
+    color: colors.text,
+    borderWidth: StyleSheet.hairlineWidth,
+    borderColor: colors.border,
+  },
+  updated: { fontSize: fontSize.small, color: colors.textMuted },
   card: {
     backgroundColor: colors.surface,
     borderRadius: radius.md,
@@ -95,6 +146,7 @@ const styles = StyleSheet.create({
   modal: { fontSize: fontSize.body + 4, fontWeight: '700', color: colors.primary },
   meta: { fontSize: fontSize.body, color: colors.textMuted },
   range: { fontSize: fontSize.body, color: colors.text },
+  empty: { fontSize: fontSize.body, color: colors.textMuted, textAlign: 'center', marginTop: spacing.xl },
   error: { fontSize: fontSize.body, color: colors.danger, textAlign: 'center' },
   retry: { fontSize: fontSize.body, color: colors.primary, fontWeight: '700', marginTop: spacing.md },
 });

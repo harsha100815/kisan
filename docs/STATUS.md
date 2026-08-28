@@ -1,6 +1,6 @@
 # Project Status Report — Kisan Sahayak
 
-**Date:** 2026-08-26 · **Phase:** 0 (skeleton) · **Repo:** https://github.com/harsha100815/kisan (`main` @ `6cd1abd`)
+**Date:** 2026-08-28 · **Phase:** 1 (working app) · **Repo:** https://github.com/harsha100815/kisan
 
 ---
 
@@ -18,11 +18,12 @@ Hindi-first, Android-first, low-end-device friendly. WhatsApp planned as a paral
 | Area | State |
 |---|---|
 | Local dev stack | ✅ Working (Docker Compose: postgres + redis + api + worker) |
-| Backend API | ✅ Working, tested (12/12), lint clean |
+| Backend API | ✅ Working, tested (27/27), lint clean |
 | Database | ✅ Migrated (`users`, `diagnoses` tables) |
-| Mobile app | ⚠️ Shell only — deps not installed, never run |
+| Mobile app | ✅ Runnable in Expo Go — all 4 tabs functional |
+| Mandi prices | ✅ Real adapter built (`datagov`); stub while key pending |
+| Vision diagnosis | ✅ Real adapter built (OpenAI); null provider while key pending |
 | WhatsApp client | ❌ Not started (provider slot stubbed) |
-| Real providers | ❌ All stubs (vision, SMS, mandi data, storage) |
 
 ## 3. What's verified working
 
